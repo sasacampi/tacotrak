@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import Navbar from "./components/Navbar.js";
+import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 
 export default function App() {
@@ -11,5 +11,3 @@ export default function App() {
     </div>
   );
 }
-
-//ta reunindo todos os arquivos do component aqui

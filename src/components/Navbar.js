@@ -4,28 +4,47 @@ import ReactDOM from "react-dom";
 export default function Navbar() {
   return (
     <div>
-        <header>
-            <div className="navbar--logo">
-            <h1 class="title" >Tacotrak</h1>         
-                  </div>
-                  <label for="nav-toggle" className = "nav-toggle-label"> 
-                    <span className="label-span"></span> 
-                  </label>
-                  <nav> 
-                    <ul>                      
-                      <li><a>Home</a></li>
-                      <li><a>Sobre nós</a></li>
-                      <li><a>Menu</a></li>
-                      <li><a>Ferramentas</a></li>
-                      <li><a>Contato</a></li> 
-                      <li><button><h1>Entrar</h1></button></li>
-                    </ul>
-                  </nav>
-                  
-                </header>
-                  <div class="content">
-                  </div>
-                </div>
+      <body>
+        <nav>
+          <a href="#" class="logo">
+            Tacotrak
+          </a>
+          <div class="bx bx-menu" id="menu-icon"></div>
 
-    )
+          <ul class="nav-list">
+            <li>
+              <a href="">Home</a>
+            </li>
+            <li>
+              <a href="">Sobre nos</a>
+            </li>
+            <li>
+              <a href="">Menu</a>
+            </li>
+            <li>
+              <a href="">Ferramentas</a>
+            </li>
+            <li>
+              <a href="">Contato</a>
+            </li>
+          </ul>
+
+          <a href="#" class="btn">
+            Entrar
+          </a>
+        </nav>
+      </body>
+      <div class="content"></div>
+    </div>
+  );
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  let menu = document.querySelector("#menu-icon");
+  let navList = document.querySelector(".nav-list");
+
+  menu.onclick = () => {
+    menu.classList.toggle("bx-x");
+    navList.classList.toggle("open");
+  };
+});
