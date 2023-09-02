@@ -10,6 +10,12 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
 }
 
 nav {
@@ -83,7 +89,7 @@ section {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
 }
 
@@ -96,16 +102,6 @@ section {
 .m-text p {
   font-size: 30px;
   font-weight: 600;
-}
-
-@media (max-width: 1350px) {
-  nav {
-    padding: 20px 5%;
-  }
-
-  section {
-    padding: 0 5%;
-  }
 }
 
 @media (max-width: 950px) {
@@ -129,16 +125,33 @@ section {
 @media (max-width: 860px) {
   #menu-icon {
     display: block;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .nav-list a.icon {
+    background: black;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .menu-icon {
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
   }
 
   .nav-list {
     position: absolute;
-    top: -800px;
+    top: 0;
     left: 0;
     right: 0;
     display: flex;
     flex-direction: column;
-    background: #00c9e0;
+    background: #fb9333;
     text-align: left;
     transition: all 0.5s ease;
   }
@@ -153,7 +166,7 @@ section {
 
   .nav-list a:hover {
     background: #fff;
-    color: #00c9e0;
+    color: #fb9333;
   }
 
   .nav-list.open {

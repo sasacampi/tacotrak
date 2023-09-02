@@ -6,12 +6,17 @@ export default function Navbar() {
     <div>
       <body>
         <nav>
-          <a href="#" class="logo">
+          <a href="#" className="logo">
             Tacotrak
           </a>
-          <div class="bx bx-menu" id="menu-icon"></div>
-
-          <ul class="nav-list">
+          <a
+            href="javascript:void(0);"
+            className="icon menu-icon"
+            onclick="myFunction()"
+          >
+            <i className="fa fa-bars"></i>
+          </a>
+          <ul className="nav-list">
             <li>
               <a href="">Home</a>
             </li>
@@ -29,22 +34,21 @@ export default function Navbar() {
             </li>
           </ul>
 
-          <a href="#" class="btn">
+          <a href="#" className="btn">
             Entrar
           </a>
         </nav>
       </body>
-      <div class="content"></div>
+      <div className="content"></div>
     </div>
   );
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  let menu = document.querySelector("#menu-icon");
-  let navList = document.querySelector(".nav-list");
-
-  menu.onclick = () => {
-    menu.classList.toggle("bx-x");
-    navList.classList.toggle("open");
-  };
-});
+function myFunction() {
+  var x = document.getElementById("myLinks");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
