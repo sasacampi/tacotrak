@@ -14,12 +14,11 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   text-align: center;
 }
 
 nav {
-  position: fixed;
+  position: relative;
   width: 100%;
   top: 0;
   right: 0;
@@ -178,4 +177,67 @@ section {
   .m-text h1 {
     font-size: 50px;
   }
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: auto;
+  padding-bottom: 5rem;
+  overflow-x: hidden;
+}
+
+.hero--image {
+  display: inline-block;
+  position: relative;
+  flex-basis: auto;
+  width: 45%;
+  max-width: 45rem;
+  min-height: auto;
+}
+
+.hero--text {
+  flex-direction: column;
+  display: inline-block;
+  width: 45%;
+  text-align: left;
+}
+
+.hero h1 {
+  font-family: Poppins;
+  color: #575757;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 3.5rem;
+  height: 11rem;
+}
+
+.hero--text > h1 > span {
+  color: #fa7436;
+}
+
+.hero h2 {
+  font-size: 1rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2rem;
+  color: #575757;
+  width: 30rem;
+  height: 7rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 34px;
+  color: #fff;
+  background: #fb9333;
+  border-radius: 30px;
+  font-size: 14px;
+  border: 2px solid transparent;
+  transition: all 0.4s ease;
 }
