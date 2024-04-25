@@ -1,22 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import { Redirect, Tabs } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
-import { icons } from "../../constants";
-import { Loader } from "../../components";
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { Icon } from "react-native-paper";
 
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
-    <View className="flex items-center justify-center gap-2">
-      <Image
-        source={icon}
-        resizeMode="contain"
-        tintColor={color}
-        className="w-6 h-6"
-      />
+    <View className="flex items-center justify-center">
+      <Icon source={icon} size={30} color={color} />
       <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        className={`${
+          focused ? "font-psemibold" : "font-pregular"
+        } text-xs mt-2`}
         style={{ color: color }}
       >
         {name}
@@ -26,10 +21,6 @@ const TabIcon = ({ icon, color, name, focused }) => {
 };
 
 const TabLayout = () => {
-  const { loading, isLogged } = useGlobalContext();
-
-  if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-
   return (
     <>
       <Tabs
@@ -52,7 +43,7 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.home}
+                icon={"home"}
                 color={color}
                 name="Home"
                 focused={focused}
@@ -60,56 +51,55 @@ const TabLayout = () => {
             ),
           }}
         />
+
         <Tabs.Screen
-          name="bookmark"
+          name="diary"
           options={{
-            title: "Bookmark",
+            title: "Diário",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={"notebook"}
                 color={color}
-                name="Bookmark"
+                name="Diário"
                 focused={focused}
               />
             ),
           }}
         />
 
-        {/* <Tabs.Screen
-          name="create"
+        <Tabs.Screen
+          name="recipes"
           options={{
-            title: "Create",
+            title: "Receitas",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.plus}
+                icon={"silverware-clean"}
                 color={color}
-                name="Create"
+                name="Receitas"
                 focused={focused}
               />
             ),
           }}
-        /> */}
+        />
+
         <Tabs.Screen
           name="profile"
           options={{
-            title: "Profile",
+            title: "Perfil",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile}
+                icon={"account"}
                 color={color}
-                name="Profile"
+                name="Perfil"
                 focused={focused}
               />
             ),
           }}
         />
       </Tabs>
-
-      <Loader isLoading={loading} />
-      <StatusBar backgroundColor="#161622" style="light" />
     </>
   );
 };
