@@ -69,22 +69,6 @@ const TabLayout = () => {
         />
 
         <Tabs.Screen
-          name="recipes"
-          options={{
-            title: "Receitas",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={"silverware-clean"}
-                color={color}
-                name="Receitas"
-                focused={focused}
-              />
-            ),
-          }}
-        />
-
-        <Tabs.Screen
           name="profile"
           options={{
             title: "Perfil",

@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        deepblue: "#040415",
         primary: "#161622",
         secondary: {
           DEFAULT: "#FF9C01",
@@ -29,6 +30,8 @@ module.exports = {
         pbold: ["Poppins-Bold", "sans-serif"],
         pextrabold: ["Poppins-ExtraBold", "sans-serif"],
         pblack: ["Poppins-Black", "sans-serif"],
+        circular: ["Circular-Std-Medium", "sans-serif"],
+        manrope: ["Manrope", "sans-serif"],
       },
     },
   },
