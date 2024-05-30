@@ -11,6 +11,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { IconButton } from "react-native-paper";
 import profileImage from "../../assets/images/profile.png";
+import { LinearGradient } from "expo-linear-gradient";
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -95,105 +96,111 @@ const App = () => {
       tipoRefeição.charAt(0).toUpperCase() + tipoRefeição.slice(1);
     return (
       <View style={styles.mealContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{formattedRefeição}</Text>
-          <IconButton
-            icon="plus"
-            size={24}
-            onPress={() => adicionarItem(tipoRefeição)}
-            style={styles.addButton}
-          />
-        </View>
-        <Text style={styles.calories}>
-          {totals[tipoRefeição].calorias} kcal
-        </Text>
-        <View style={styles.macroContainer}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
-              style={[styles.macroText, { color: "#8676FE", marginRight: 5 }]}
-            >
-              ●
-            </Text>
-            <Text style={styles.gorduraText}>
-              Gordura: {totals[tipoRefeição].gordura}g
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 20,
-            }}
+        <View style={styles.titleContainer}></View>
+        <View style={styles.gradientContainer}>
+          <LinearGradient
+            colors={["#FC74B1", "#FCAE48"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
           >
-            <Text
-              style={[styles.macroText, { color: "#FF844B", marginRight: 5 }]}
-            >
-              ●
-            </Text>
-            <Text style={styles.carbsText}>
-              Carbs: {totals[tipoRefeição].carboidratos}g
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 20,
-            }}
-          >
-            <Text
-              style={[styles.macroText, { color: "#F85C7F", marginRight: 5 }]}
-            >
-              ●
-            </Text>
-            <Text style={styles.protText}>
-              Prot: {totals[tipoRefeição].proteínas}g
-            </Text>
-          </View>
-        </View>
+            <View style={styles.gradientTextContainer}>
+              <Text style={styles.gradientText}>{formattedRefeição}</Text>
+            </View>
 
-        <DropDownPicker
-          open={open[tipoRefeição]}
-          value={null}
-          items={items[tipoRefeição].map((item) => ({
-            label: item.nome,
-            value: item.id,
-          }))}
-          setOpen={(value) => setOpen({ ...open, [tipoRefeição]: value })}
-          setValue={() => {}}
-          setItems={(items) => setItems({ ...items, [tipoRefeição]: items })}
-          style={styles.dropdown}
-          placeholder="Selecione um item"
-          textStyle={{
-            color: "#888",
-            fontFamily: "Manrope-ExtraLight",
-            marginLeft: 6,
-          }}
-        />
-        <FlatList
-          data={items[tipoRefeição]}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.foodItem}>
-              <Text>{item.nome}</Text>
-              <Text>{item.calorias} kcal</Text>
+            <View style={styles.addButtonContainer}>
               <IconButton
-                icon="close"
+                icon="plus"
                 size={24}
-                onPress={() =>
-                  removerItem(
-                    tipoRefeição,
-                    item.id,
-                    item.calorias,
-                    item.carboidratos,
-                    item.proteínas,
-                    item.gordura
-                  )
-                }
+                onPress={() => adicionarItem(tipoRefeição)}
+                color="#FFFFFF"
               />
             </View>
-          )}
-        />
+          </LinearGradient>
+        </View>
+        {/* cristo do ceu que trabalho fazer grid de cor */}
+        <View style={styles.shadowContainer}>
+          <Text style={styles.calories}>
+            {totals[tipoRefeição].calorias} kcal
+          </Text>
+          <View style={styles.macroContainer}>
+            <View style={styles.macroRow}>
+              <Text
+                style={[styles.macroText, { color: "#FC74B1", marginRight: 5 }]}
+              >
+                ●
+              </Text>
+              <Text style={styles.gorduraText}>
+                Gordura: {totals[tipoRefeição].gordura}g
+              </Text>
+            </View>
+            <View style={styles.macroRow}>
+              <Text
+                style={[
+                  styles.macroText,
+                  { color: "#FCAE48 ", marginRight: 5 },
+                ]}
+              >
+                ●
+              </Text>
+              <Text style={styles.carbsText}>
+                Carbs: {totals[tipoRefeição].carboidratos}g
+              </Text>
+            </View>
+            <View style={styles.macroRow}>
+              <Text
+                style={[styles.macroText, { color: "#B46EE2", marginRight: 5 }]}
+              >
+                ●
+              </Text>
+              <Text style={styles.protText}>
+                Prot: {totals[tipoRefeição].proteínas}g
+              </Text>
+            </View>
+          </View>
+          <DropDownPicker
+            open={open[tipoRefeição]}
+            value={null}
+            items={items[tipoRefeição].map((item) => ({
+              label: item.nome,
+              value: item.id,
+            }))}
+            setOpen={(value) => setOpen({ ...open, [tipoRefeição]: value })}
+            setValue={() => {}}
+            setItems={(items) => setItems({ ...items, [tipoRefeição]: items })}
+            style={styles.dropdown}
+            placeholder="Selecione um item"
+            textStyle={{
+              color: "#888",
+              fontFamily: "Manrope-ExtraLight",
+              marginLeft: 6,
+            }}
+          />
+          <FlatList
+            data={items[tipoRefeição]}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.foodItem}>
+                <Text>{item.nome}</Text>
+                <Text>{item.calorias} kcal</Text>
+                <IconButton
+                  icon="close"
+                  size={24}
+                  onPress={() =>
+                    removerItem(
+                      tipoRefeição,
+                      item.id,
+                      item.calorias,
+                      item.carboidratos,
+                      item.proteínas,
+                      item.gordura
+                    )
+                  }
+                />
+              </View>
+            )}
+          />
+        </View>
       </View>
     );
   };
@@ -208,13 +215,14 @@ const App = () => {
             <Text style={styles.dateText}>{getCurrentDate()}</Text>
           </View>
         </View>
-
         <View style={styles.container}>
           {renderRefeição("caféDaManhã")}
           {renderRefeição("almoço")}
           {renderRefeição("jantar")}
           {renderRefeição("lanches")}
         </View>
+
+        <View style={styles.summaryDivider}></View>
 
         <View style={styles.summaryContainer}>
           <Text style={styles.summaryTitle}>Sumário:</Text>
@@ -253,11 +261,6 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
   addButton: {
     alignSelf: "flex-end",
   },
@@ -284,6 +287,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 20,
     fontFamily: "Manrope-Bold",
+    color: "#242752",
   },
   dateText: {
     fontSize: 14,
@@ -293,14 +297,12 @@ const styles = StyleSheet.create({
   },
   container: {
     margin: 20,
-    padding: 10,
+    padding: 2,
     borderRadius: 8,
     backgroundColor: "#fff",
   },
   mealContainer: {
-    marginBottom: 8,
-    borderBottomWidth: 0.9,
-    borderBottomColor: "rgba(204, 204, 204, 0.5)",
+    marginBottom: 20,
   },
 
   macroContainer: {
@@ -314,7 +316,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Manrope-Medium",
     color: "#888",
-    marginBottom: 12,
   },
 
   carbsText: {
@@ -333,25 +334,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 22,
+    marginBottom: 45,
     marginLeft: 2,
   },
-  title: {
-    fontSize: 16,
-    fontFamily: "Manrope-Bold",
-    color: "#FA5A7D",
+
+  dropdown: {
+    padding: 2,
+    borderRadius: 18,
+    borderColor: "rgb(202, 202, 202)",
+    color: "#gray",
+    marginTop: 25,
+    marginBottom: 25,
   },
+
   calories: {
     fontSize: 14,
     fontFamily: "Manrope-Bold",
-    color: "black",
+    color: "#242752",
+    marginTop: 5,
   },
-  dropdown: {
-    marginBottom: 36,
-    borderRadius: 24,
-    borderColor: "#888",
-    color: "#888",
-  },
+  //terminar aqui
   foodItem: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -362,19 +364,18 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   summaryContainer: {
-    padding: 16,
-    margin: 12,
+    padding: 8,
+    margin: 8,
     borderRadius: 8,
   },
   caloriesContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
+    color: "#242752",
   },
   label: {
     fontSize: 16,
     fontFamily: "Manrope-ExtraLight",
-    margin: 5,
     flexWrap: "wrap",
   },
   value: {
@@ -385,7 +386,80 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 16,
     fontFamily: "Manrope-Bold",
-    color: "#FA5A7D",
+    color: "#242752",
+  },
+
+  addButtonContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 25,
+    padding: 2,
+    width: 26,
+    height: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    right: 0,
+    top: 10,
+    bottom: 0,
+    justifyContent: "center",
+    paddingRight: 2,
+    marginRight: 10,
+  },
+
+  //ta mto feio esse botao deus do ceu
+  addButton: {
+    backgroundColor: "#F85C7F",
+  },
+  shadowContainer: {
+    padding: 10,
+    backgroundColor: "#fff",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: "rgb(136, 136, 136)",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+    marginTop: -5,
+    overflow: "hidden",
+  },
+
+  macroRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20,
+  },
+
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  gradient: {
+    width: "100%",
+    height: 50,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+
+  gradientTextContainer: {
+    position: "absolute",
+    padding: 6,
+    marginLeft: 16,
+    alignItems: "left",
+  },
+
+  gradientText: {
+    fontFamily: "Manrope-Bold",
+    fontSize: 16.5,
+    padding: 2,
+    color: "#FFF",
+  },
+
+  summaryDivider: {
+    height: 1,
+    width: "100%",
+    backgroundColor: "rgb(230, 230, 230)",
   },
 });
 
