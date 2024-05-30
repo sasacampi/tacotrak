@@ -1,5 +1,15 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  FlatList,
+  ScrollView,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import { IconButton } from "react-native-paper";
 import profileImage from "../../assets/images/profile.png";
 
 const getCurrentDate = () => {
@@ -12,19 +22,250 @@ const getCurrentDate = () => {
   });
 };
 
-const WelcomeHeader = ({ username }) => {
-  return (
-    <View style={styles.headerContainer}>
-      <Image source={profileImage} style={styles.icon} />
-      <View style={styles.textContainer}>
-        <Text style={styles.welcomeText}>Olá, {username}!</Text>
-        <Text style={styles.dateText}>{getCurrentDate()}</Text>
+const App = () => {
+  const [open, setOpen] = useState({
+    caféDaManhã: false,
+    almoço: false,
+    jantar: false,
+    lanches: false,
+  });
+  const [items, setItems] = useState({
+    caféDaManhã: [],
+    almoço: [],
+    jantar: [],
+    lanches: [],
+  });
+  const [totals, setTotals] = useState({
+    caféDaManhã: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
+    almoço: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
+    jantar: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
+    lanches: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
+  });
+  const objetivoTotalCalorias = 2000;
+
+  const adicionarItem = (tipoRefeição) => {
+    const novoItem = {
+      id: items[tipoRefeição].length + 1,
+      nome: "Item de comida",
+      calorias: 100,
+      carboidratos: 20,
+      proteínas: 10,
+      gordura: 5,
+    };
+    setItems({
+      ...items,
+      [tipoRefeição]: [...items[tipoRefeição], novoItem],
+    });
+    setTotals({
+      ...totals,
+      [tipoRefeição]: {
+        calorias: totals[tipoRefeição].calorias + novoItem.calorias,
+        carboidratos: totals[tipoRefeição].carboidratos + novoItem.carboidratos,
+        proteínas: totals[tipoRefeição].proteínas + novoItem.proteínas,
+        gordura: totals[tipoRefeição].gordura + novoItem.gordura,
+      },
+    });
+  };
+
+  const removerItem = (
+    tipoRefeição,
+    id,
+    calorias,
+    carboidratos,
+    proteínas,
+    gordura
+  ) => {
+    setItems({
+      ...items,
+      [tipoRefeição]: items[tipoRefeição].filter((item) => item.id !== id),
+    });
+    setTotals({
+      ...totals,
+      [tipoRefeição]: {
+        calorias: totals[tipoRefeição].calorias - calorias,
+        carboidratos: totals[tipoRefeição].carboidratos - carboidratos,
+        proteínas: totals[tipoRefeição].proteínas - proteínas,
+        gordura: totals[tipoRefeição].gordura - gordura,
+      },
+    });
+  };
+
+  const renderRefeição = (tipoRefeição) => {
+    const formattedRefeição =
+      tipoRefeição.charAt(0).toUpperCase() + tipoRefeição.slice(1);
+    return (
+      <View style={styles.mealContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{formattedRefeição}</Text>
+          <IconButton
+            icon="plus"
+            size={24}
+            onPress={() => adicionarItem(tipoRefeição)}
+            style={styles.addButton}
+          />
+        </View>
+        <Text style={styles.calories}>
+          {totals[tipoRefeição].calorias} kcal
+        </Text>
+        <View style={styles.macroContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text
+              style={[styles.macroText, { color: "#8676FE", marginRight: 5 }]}
+            >
+              ●
+            </Text>
+            <Text style={styles.gorduraText}>
+              Gordura: {totals[tipoRefeição].gordura}g
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 20,
+            }}
+          >
+            <Text
+              style={[styles.macroText, { color: "#FF844B", marginRight: 5 }]}
+            >
+              ●
+            </Text>
+            <Text style={styles.carbsText}>
+              Carbs: {totals[tipoRefeição].carboidratos}g
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 20,
+            }}
+          >
+            <Text
+              style={[styles.macroText, { color: "#F85C7F", marginRight: 5 }]}
+            >
+              ●
+            </Text>
+            <Text style={styles.protText}>
+              Prot: {totals[tipoRefeição].proteínas}g
+            </Text>
+          </View>
+        </View>
+
+        <DropDownPicker
+          open={open[tipoRefeição]}
+          value={null}
+          items={items[tipoRefeição].map((item) => ({
+            label: item.nome,
+            value: item.id,
+          }))}
+          setOpen={(value) => setOpen({ ...open, [tipoRefeição]: value })}
+          setValue={() => {}}
+          setItems={(items) => setItems({ ...items, [tipoRefeição]: items })}
+          style={styles.dropdown}
+          placeholder="Selecione um item"
+          textStyle={{
+            color: "#888",
+            fontFamily: "Manrope-ExtraLight",
+            marginLeft: 6,
+          }}
+        />
+        <FlatList
+          data={items[tipoRefeição]}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.foodItem}>
+              <Text>{item.nome}</Text>
+              <Text>{item.calorias} kcal</Text>
+              <IconButton
+                icon="close"
+                size={24}
+                onPress={() =>
+                  removerItem(
+                    tipoRefeição,
+                    item.id,
+                    item.calorias,
+                    item.carboidratos,
+                    item.proteínas,
+                    item.gordura
+                  )
+                }
+              />
+            </View>
+          )}
+        />
       </View>
-    </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.appContainer}>
+      <ScrollView>
+        <View style={styles.headerContainer}>
+          <Image source={profileImage} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.welcomeText}>Olá, nome de usuário.</Text>
+            <Text style={styles.dateText}>{getCurrentDate()}</Text>
+          </View>
+        </View>
+
+        <View style={styles.container}>
+          {renderRefeição("caféDaManhã")}
+          {renderRefeição("almoço")}
+          {renderRefeição("jantar")}
+          {renderRefeição("lanches")}
+        </View>
+
+        <View style={styles.summaryContainer}>
+          <Text style={styles.summaryTitle}>Sumário:</Text>
+          <View style={styles.caloriesContainer}>
+            <Text style={styles.label}>Calorias restantes:</Text>
+            <Text style={styles.value}>
+              {objetivoTotalCalorias -
+                (totals.caféDaManhã.calorias +
+                  totals.almoço.calorias +
+                  totals.jantar.calorias +
+                  totals.lanches.calorias)}
+            </Text>
+          </View>
+          <View style={styles.caloriesContainer}>
+            <Text style={styles.label}>Calorias consumidas:</Text>
+            <Text style={styles.value}>
+              {totals.caféDaManhã.calorias +
+                totals.almoço.calorias +
+                totals.jantar.calorias +
+                totals.lanches.calorias}
+            </Text>
+          </View>
+          <View style={styles.caloriesContainer}>
+            <Text style={styles.label}>39% do RDI: </Text>
+            <Text style={styles.value}>
+              {totals.caféDaManhã.calorias +
+                totals.almoço.calorias +
+                totals.jantar.calorias +
+                totals.lanches.calorias}
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  addButton: {
+    alignSelf: "flex-end",
+  },
+
+  appContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -45,11 +286,107 @@ const styles = StyleSheet.create({
     fontFamily: "Manrope-Bold",
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "gray",
     textTransform: "capitalize",
     fontFamily: "Manrope-Medium",
   },
+  container: {
+    margin: 20,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+  },
+  mealContainer: {
+    marginBottom: 8,
+    borderBottomWidth: 0.9,
+    borderBottomColor: "rgba(204, 204, 204, 0.5)",
+  },
+
+  macroContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+    color: "#888",
+  },
+
+  gorduraText: {
+    fontSize: 12,
+    fontFamily: "Manrope-Medium",
+    color: "#888",
+    marginBottom: 12,
+  },
+
+  carbsText: {
+    fontSize: 12,
+    fontFamily: "Manrope-Medium",
+    color: "#888",
+  },
+
+  protText: {
+    fontSize: 12,
+    fontFamily: "Manrope-Medium",
+    color: "#888",
+  },
+
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 22,
+    marginLeft: 2,
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: "Manrope-Bold",
+    color: "#FA5A7D",
+  },
+  calories: {
+    fontSize: 14,
+    fontFamily: "Manrope-Bold",
+    color: "black",
+  },
+  dropdown: {
+    marginBottom: 36,
+    borderRadius: 24,
+    borderColor: "#888",
+    color: "#888",
+  },
+  foodItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  summaryContainer: {
+    padding: 16,
+    margin: 12,
+    borderRadius: 8,
+  },
+  caloriesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: "Manrope-ExtraLight",
+    margin: 5,
+    flexWrap: "wrap",
+  },
+  value: {
+    fontSize: 16,
+    fontFamily: "Manrope-Bold",
+  },
+
+  summaryTitle: {
+    fontSize: 16,
+    fontFamily: "Manrope-Bold",
+    color: "#FA5A7D",
+  },
 });
 
-export default WelcomeHeader;
+export default App;
