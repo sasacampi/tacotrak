@@ -12,6 +12,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { IconButton } from "react-native-paper";
 import profileImage from "../../assets/images/profile.png";
 import { LinearGradient } from "expo-linear-gradient";
+import { BarChart } from "react-native-gifted-charts";
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -258,6 +259,13 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+  },
+
   addButton: {
     alignSelf: "flex-end",
   },

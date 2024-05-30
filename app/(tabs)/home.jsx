@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Image, RefreshControl, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import profileImage from "../../assets/images/profile.png";
 import {
   Avatar,
   Badge,
@@ -14,13 +23,13 @@ import { BarChart } from "react-native-gifted-charts";
 
 const Home = () => {
   const barData = [
-    { value: 100, label: "M" },
-    { value: 500, label: "T", frontColor: "#177AD5" },
-    { value: 800, label: "W", frontColor: "#177AD5" },
-    { value: 1000, label: "T" },
-    { value: 200, label: "F", frontColor: "#177AD5" },
-    { value: 100, label: "S" },
-    { value: 150, label: "S" },
+    { value: 2000, label: "S,", frontColor: "#FF844B" },
+    { value: 1500, label: "T", frontColor: "#FF844B" },
+    { value: 1800, label: "Q", frontColor: "#FF844B" },
+    { value: 1000, label: "Q", frontColor: "#FF844B" },
+    { value: 1200, label: "S", frontColor: "#FF844B" },
+    { value: 1100, label: "S", frontColor: "#FF844B" },
+    { value: 3150, label: "D", frontColor: "#FF844B" },
   ];
   const currentDate = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
@@ -30,54 +39,200 @@ const Home = () => {
 
   return (
     <SafeAreaView>
-      <View>
-        <Text className="text-3xl mx-10 mt-10 font-bold">Olá, Manu!</Text>
-        <Text className="text-lg mx-10 capitalize text-gray">
-          {currentDate}
-        </Text>
-      </View>
-      <View>
-        <Text className="text-xl mx-10 mt-10 font-semibold">
-          Diário semanal
-        </Text>
-      </View>
-      <View className="mx-10">
-        <List.Section>
-          <List.Item
-            title="Calorias semanais"
-            left={() => <List.Icon icon="fire" />}
-            right={() => <Text>1.850kcal</Text>}
-            className="p-3 my-5 rounded-lg bg-blue-200"
+      <ScrollView>
+        <View style={styles.container}>
+          <Image source={profileImage} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.text3xl}>Olá, Seja bem vindo.</Text>
+            <Text style={styles.textLg}>{currentDate}</Text>
+          </View>
+        </View>
+        <View>
+          <Text style={styles.textXl}>Diário semanal</Text>
+          <Text style={styles.textSubtitle}>Calorias Semanais:</Text>
+          <Text style={styles.textValue}>11000</Text>
+        </View>
+        <View style={styles.chartContainer}>
+          <BarChart
+            barWidth={22}
+            noOfSections={1}
+            barBorderRadius={4}
+            frontColor="#E9F1F7"
+            data={barData}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            width={300}
+            height={150}
           />
-          <List.Item
-            title="Objetivo"
-            left={() => (
-              <List.Icon icon="chart-areaspline" color="color-secondary" />
-            )}
-            right={() => <Text>2.000kcal</Text>}
-            className="p-3 my-5 rounded-lg bg-blue-200"
-          />
-          <List.Item
-            title="Média diária"
-            left={() => <List.Icon icon="chart-areaspline" />}
-            right={() => <Text>1.500kcal</Text>}
-            className="p-3 my-5 rounded-lg bg-blue-200"
-          />
-        </List.Section>
-      </View>
-      <View className="my-10 mx-10">
-        <BarChart
-          barWidth={22}
-          noOfSections={3}
-          barBorderRadius={4}
-          frontColor="lightgray"
-          data={barData}
-          yAxisThickness={0}
-          xAxisThickness={0}
-        />
-      </View>
+        </View>
+        <View style={styles.container}>
+          <List.Section>
+            <List.Item
+              style={styles.listItem}
+              onPress={() => {}}
+              title={
+                <View style={styles.itemContent}>
+                  <View style={styles.iconContainer}>
+                    <Text style={styles.titleIcon}>Objetivo</Text>
+                  </View>
+                  <View style={styles.rightContainer}>
+                    <Text style={styles.title}>2.000</Text>
+                    <Text style={styles.unit}>kcal</Text>
+                  </View>
+                </View>
+              }
+            />
+            <List.Item
+              style={styles.listItem}
+              onPress={() => {}}
+              title={
+                <View style={styles.itemContent}>
+                  <View style={styles.iconContainer}>
+                    <Text style={styles.titleIcon}>Média Diária</Text>
+                  </View>
+                  <View style={styles.rightContainer}>
+                    <Text style={styles.title}>2.000</Text>
+                    <Text style={styles.unit}>kcal</Text>
+                  </View>
+                </View>
+              }
+            />
+
+            <List.Item
+              style={styles.listItem}
+              onPress={() => {}}
+              title={
+                <View style={styles.itemContent}>
+                  <View style={styles.iconContainer}>
+                    <Text style={styles.titleIcon}>Meta de Água</Text>
+                  </View>
+                  <View style={styles.rightContainer}>
+                    <Text style={styles.title}>2l/2l</Text>
+                    <Text style={styles.unit}>kcal</Text>
+                  </View>
+                </View>
+              }
+            />
+          </List.Section>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
+};
+
+const styles = {
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginLeft: 10,
+    padding: 5,
+    flexWrap: "wrap",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+
+  icon: {
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+    margin: 10,
+  },
+  text3xl: {
+    fontSize: 20,
+    fontFamily: "Manrope-Bold",
+    color: "#242752",
+  },
+  textLg: {
+    fontSize: 14,
+    color: "gray",
+    textTransform: "capitalize",
+    fontFamily: "Manrope-Medium",
+  },
+  textXl: {
+    fontSize: 24,
+    color: "#242752",
+    textTransform: "capitalize",
+    fontFamily: "Manrope-Bold",
+    marginLeft: 25,
+    marginTop: 35,
+  },
+  chartContainer: {
+    marginVertical: 50,
+    marginHorizontal: 20,
+  },
+
+  listItem: {
+    backgroundColor: "transparent",
+    borderColor: "#DDDDDD",
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "left",
+    paddingHorizontal: 8,
+    marginBottom: 10,
+    width: 370,
+    height: 110,
+    flexDirection: "column",
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 6,
+  },
+  rightContainer: {
+    flexDirection: "column",
+  },
+
+  titleIcon: {
+    marginRight: 35,
+    fontSize: 18,
+    fontFamily: "Manrope-Bold",
+    color: "#242752",
+  },
+
+  title: {
+    fontSize: 16,
+    fontFamily: "Manrope-Medium",
+    color: "#242752",
+    marginBottom: 4,
+    top: 0,
+  },
+  value: {
+    marginRight: 5,
+  },
+  unit: {
+    color: "#97A7B7",
+    fontSize: 12,
+  },
+
+  image: {
+    width: 24,
+    height: 24,
+  },
+
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  textSubtitle: {
+    fontSize: 18,
+    color: "#242752",
+    textTransform: "capitalize",
+    fontFamily: "Manrope-Medium",
+    marginLeft: 25,
+    marginTop: 2,
+  },
+
+  textValue: {
+    fontSize: 18,
+    color: "#242752",
+    textTransform: "capitalize",
+    fontFamily: "Manrope-Bold",
+    marginLeft: 25,
+    marginTop: 2,
+  },
 };
 
 export default Home;
