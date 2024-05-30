@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 16,
     marginBottom: 2,
-    color: "#040415",
+    color: "#242752",
     fontFamily: "Circular-Medium",
   },
 
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontFamily: "Manrope-Bold",
+    color: "#242752",
   },
   statLabel: {
     fontSize: 16,
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
   goalsHeading: {
     fontSize: 20,
     fontFamily: "Manrope-Bold",
+    color: "#242752",
   },
 
   header: {
@@ -173,7 +175,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 18,
-    fontcolor: "black",
+    color: "#242752",
     textAlign: "center",
     fontFamily: "Circular-Medium",
   },
@@ -191,11 +193,13 @@ const styles = StyleSheet.create({
   },
 
   descriptionText: {
-    color: "#888",
+    color: "#97A7B7",
     fontFamily: "Manrope-Medium",
+    fontSize: 14,
   },
   lightText: {
-    color: "#888",
+    color: "#97A7B7",
+    fontSize: 14,
   },
 });
 
