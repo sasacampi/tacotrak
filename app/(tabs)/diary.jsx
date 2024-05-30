@@ -136,10 +136,7 @@ const App = () => {
             </View>
             <View style={styles.macroRow}>
               <Text
-                style={[
-                  styles.macroText,
-                  { color: "#FCAE48 ", marginRight: 5 },
-                ]}
+                style={[styles.macroText, { color: "#FCAE48", marginRight: 5 }]}
               >
                 ●
               </Text>
@@ -460,6 +457,16 @@ const styles = StyleSheet.create({
     height: 1,
     width: "100%",
     backgroundColor: "rgb(230, 230, 230)",
+  },
+
+  scrollViewContent: {
+    flexGrow: 1,
+    minHeight: "100%",
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
 });
 
