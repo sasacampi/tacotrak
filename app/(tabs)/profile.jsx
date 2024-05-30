@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 2,
     color: "#040415",
+    fontFamily: "manrope",
   },
 
   marginRight: {

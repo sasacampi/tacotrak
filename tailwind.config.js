@@ -31,7 +31,7 @@ module.exports = {
         pextrabold: ["Poppins-ExtraBold", "sans-serif"],
         pblack: ["Poppins-Black", "sans-serif"],
         circular: ["Circular-Std-Medium", "sans-serif"],
-        manrope: ["Manrope", "sans-serif"],
+        manrope: ["Manrope-ExtraLight", "sans-serif"],
       },
     },
   },
