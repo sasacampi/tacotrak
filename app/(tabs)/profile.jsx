@@ -41,6 +41,7 @@ const Profile = () => {
             </View>
           </View>
         </View>
+        <View style={styles.line}></View>
         <View style={styles.goalsContainer}>
           <Text style={styles.goalsHeading}>Seus Objetivos</Text>
           <List.Section>
@@ -121,11 +122,10 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 24,
-    fontWeight: "bold",
     marginTop: 16,
     marginBottom: 2,
     color: "#040415",
-    fontFamily: "manrope",
+    fontFamily: "Circular-Medium",
   },
 
   marginRight: {
@@ -142,11 +142,12 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "Manrope-Bold",
   },
   statLabel: {
     fontSize: 16,
     color: "#777",
+    fontFamily: "Manrope-Medium",
   },
   goalsContainer: {
     marginTop: 64,
@@ -154,8 +155,7 @@ const styles = StyleSheet.create({
   },
   goalsHeading: {
     fontSize: 20,
-    fontWeight: "bold",
-    fontFamily: "manrope",
+    fontFamily: "Manrope-Bold",
   },
 
   header: {
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 14,
   },
+
   closeIcon: {
     width: 64,
     height: 64,
@@ -172,9 +173,11 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontcolor: "black",
     textAlign: "center",
+    fontFamily: "Circular-Medium",
   },
+
   settingsIcon: {
     width: 64,
     height: 64,
@@ -189,6 +192,7 @@ const styles = StyleSheet.create({
 
   descriptionText: {
     color: "#888",
+    fontFamily: "Manrope-Medium",
   },
   lightText: {
     color: "#888",

@@ -19,6 +19,9 @@ const RootLayout = () => {
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
     "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
     "Manrope-ExtraLight": require("../assets/fonts/Manrope-ExtraLight.ttf"),
+    "Manrope-Bold": require("../assets/fonts/Manrope-Bold.ttf"),
+    "Manrope-Medium": require("../assets/fonts/Manrope-Medium.ttf"),
+    "Circular-Medium": require("../assets/fonts/Circular.ttf"),
   });
 
   useEffect(() => {
