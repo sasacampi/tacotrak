@@ -25,6 +25,7 @@
     "react-native": "0.74.1",
     "react-native-animatable": "^1.4.0",
     "react-native-appwrite": "^0.2.2",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-gifted-charts": "^1.4.10",
     "react-native-paper": "^5.12.3",

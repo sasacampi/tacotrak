@@ -1,15 +1,55 @@
-import { View } from "react-native-animatable";
-import { Text } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import profileImage from "../../assets/images/profile.png";
 
-const Recipes = () => {
+const getCurrentDate = () => {
+  const date = new Date();
+  return date.toLocaleDateString("pt-BR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const WelcomeHeader = ({ username }) => {
   return (
-    <SafeAreaView>
-      <View>
-        <Text className="text-3xl mx-10 mt-10 font-bold">Diário</Text>
+    <View style={styles.headerContainer}>
+      <Image source={profileImage} style={styles.icon} />
+      <View style={styles.textContainer}>
+        <Text style={styles.welcomeText}>Olá, {username}!</Text>
+        <Text style={styles.dateText}>{getCurrentDate()}</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default Recipes;
+const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    marginTop: 64,
+    marginLeft: 12,
+  },
+  icon: {
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+  },
+  textContainer: {
+    marginLeft: 10,
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontFamily: "Manrope-Bold",
+  },
+  dateText: {
+    fontSize: 16,
+    color: "gray",
+    textTransform: "capitalize",
+    fontFamily: "Manrope-Medium",
+  },
+});
+
+export default WelcomeHeader;
