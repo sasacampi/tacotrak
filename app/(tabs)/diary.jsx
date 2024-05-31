@@ -7,6 +7,8 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Search,
+  TextInput,
   Modal,
   TouchableHighlight,
 } from "react-native";
@@ -15,6 +17,7 @@ import { IconButton } from "react-native-paper";
 import profileImage from "../../assets/images/profile.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { BarChart } from "react-native-gifted-charts";
+import { ActivityIndicator } from "react-native";
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -36,6 +39,7 @@ const meals = {
 const App = () => {
   const [foodData, setFoodData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedMeal, setSelectedMeal] = useState("");
   const [items, setItems] = useState({
     breakfast: [],
@@ -51,32 +55,12 @@ const App = () => {
     snacks: { calories: 0, carbohydrates: 0, protein: 0, lipids: 0 },
   });
 
-  const query = `
-  {
-    getAllFood {
-      id,
-      name,
-      category {
-        id,
-        name
-      }
-      nutrients {
-        carbohydrates,
-        lipids,
-        kcal,
-        protein,
-        dietaryFiber,
-      }
-    }
-  }
-`;
-
   const getFoodData = () => {
     try {
       fetch("https://run.mocky.io/v3/159059e1-4b8e-4dd5-a6b4-ce019df0a383", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({}),
       })
         .then((response) => response.json())
         .then((data) => setFoodData(data));
@@ -84,6 +68,12 @@ const App = () => {
       console.log(error);
     }
   };
+
+  const filterFoods = (food) => {
+    return food.name.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     getFoodData();
@@ -133,6 +123,47 @@ const App = () => {
   const renderMeal = (mealName) => {
     return (
       <View style={styles.mealContainer}>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Pesquisar alimentos..."
+              onChangeText={(text) => setSearchText(text)}
+              value={searchText}
+            />
+            <FlatList
+              data={
+                searchText
+                  ? foodData.filter((item) =>
+                      item.name.toLowerCase().includes(searchText.toLowerCase())
+                    )
+                  : []
+              }
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableHighlight
+                  onPress={() => handleSelectFood(item, selectedMeal)}
+                >
+                  <View style={styles.foodItem}>
+                    <Text>{item.name}</Text>
+                    <Text>{item.nutrients.kcal} kcal</Text>
+                    <Text>{item.nutrients.carbohydrates}c</Text>
+                    <Text>{item.nutrients.lipids}g </Text>
+                    <Text>{item.nutrients.protein}p</Text>
+                  </View>
+                </TouchableHighlight>
+              )}
+            />
+          </View>
+        </Modal>
+
         <View style={styles.titleContainer}></View>
         <View style={styles.gradientContainer}>
           <LinearGradient
@@ -198,11 +229,24 @@ const App = () => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.foodItem}>
-                <Text>{item.name}</Text>
-                <Text>{item.nutrients.kcal} kcal</Text>
+                <Text style={styles.foodName}>{item.name}</Text>
+                <View style={styles.nutrientsContainer}>
+                  <Text style={styles.nutrientText}>
+                    {item.nutrients.kcal} kcal
+                  </Text>
+                  <Text style={styles.nutrientText}>
+                    C: {item.nutrients.carbohydrates}g
+                  </Text>
+                  <Text style={styles.nutrientText}>
+                    G: {item.nutrients.lipids}g
+                  </Text>
+                  <Text style={styles.nutrientText}>
+                    P: {item.nutrients.protein}g
+                  </Text>
+                </View>
                 <IconButton
                   icon="close"
-                  size={24}
+                  size={15}
                   onPress={() => removeItem(item.id, mealName, item.nutrients)}
                 />
               </View>
@@ -524,6 +568,75 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+
+  modalContainer: {
+    flex: 1,
+    marginTop: 22,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 21,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  textInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+
+  closeButton: {
+    backgroundColor: "red",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
+  foodItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  foodName: {
+    fontFamily: "Manrope-Medium",
+    fontSize: 12,
+    color: "#242752",
+  },
+  nutrientsContainer: {
+    flexDirection: "row",
+  },
+  nutrientText: {
+    marginLeft: 6,
+    fontFamily: "Manrope-Regular",
+    fontSize: 12,
+    color: "#888",
+  },
+
+  modalContainer: {
+    flex: 1,
+    marginTop: 22,
+    padding: 20,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 20,
   },
 });
 
