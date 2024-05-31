@@ -25,7 +25,7 @@ const Profile = () => {
             size={150}
             source={require("../../assets/images/profile.png")}
           />
-          <Text style={styles.username}>Username</Text>
+          <Text style={styles.username}>Usuário</Text>
           <View style={styles.statsContainer}>
             <View style={[styles.statItem, styles.marginRight]}>
               <Text style={styles.statValue}>70kg</Text>

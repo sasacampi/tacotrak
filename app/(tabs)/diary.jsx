@@ -302,7 +302,7 @@ const App = () => {
         <View style={styles.headerContainer}>
           <Image source={profileImage} style={styles.icon} />
           <View style={styles.textContainer}>
-            <Text style={styles.welcomeText}>Olá, nome de usuário.</Text>
+            <Text style={styles.welcomeText}>Olá, Usuário.</Text>
             <Text style={styles.dateText}>{getCurrentDate()}</Text>
           </View>
         </View>
