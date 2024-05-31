@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Modal,
+  TouchableHighlight,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { IconButton } from "react-native-paper";
@@ -24,77 +26,111 @@ const getCurrentDate = () => {
   });
 };
 
+const meals = {
+  breakfast: "Café Da Manhã",
+  lunch: "Almoço",
+  dinner: "Jantar",
+  snacks: "Lanches",
+};
+
 const App = () => {
-  const [open, setOpen] = useState({
-    caféDaManhã: false,
-    almoço: false,
-    jantar: false,
-    lanches: false,
-  });
+  const [foodData, setFoodData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState("");
   const [items, setItems] = useState({
-    caféDaManhã: [],
-    almoço: [],
-    jantar: [],
-    lanches: [],
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: [],
   });
+
   const [totals, setTotals] = useState({
-    caféDaManhã: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
-    almoço: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
-    jantar: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
-    lanches: { calorias: 0, carboidratos: 0, proteínas: 0, gordura: 0 },
+    breakfast: { calories: 0, carbohydrates: 0, protein: 0, lipids: 0 },
+    lunch: { calories: 0, carbohydrates: 0, protein: 0, lipids: 0 },
+    dinner: { calories: 0, carbohydrates: 0, protein: 0, lipids: 0 },
+    snacks: { calories: 0, carbohydrates: 0, protein: 0, lipids: 0 },
   });
+
+  const query = `
+  {
+    getAllFood {
+      id,
+      name,
+      category {
+        id,
+        name
+      }
+      nutrients {
+        carbohydrates,
+        lipids,
+        kcal,
+        protein,
+        dietaryFiber,
+      }
+    }
+  }
+`;
+
+  const getFoodData = () => {
+    try {
+      fetch("https://run.mocky.io/v3/159059e1-4b8e-4dd5-a6b4-ce019df0a383", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      })
+        .then((response) => response.json())
+        .then((data) => setFoodData(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getFoodData();
+  }, []);
+
   const objetivoTotalCalorias = 2000;
 
-  const adicionarItem = (tipoRefeição) => {
-    const novoItem = {
-      id: items[tipoRefeição].length + 1,
-      nome: "Item de comida",
-      calorias: 100,
-      carboidratos: 20,
-      proteínas: 10,
-      gordura: 5,
-    };
+  const removeItem = (id, mealName, nutrients) => {
     setItems({
       ...items,
-      [tipoRefeição]: [...items[tipoRefeição], novoItem],
+      [mealName]: items[mealName].filter((item) => item.id !== id),
     });
+
     setTotals({
       ...totals,
-      [tipoRefeição]: {
-        calorias: totals[tipoRefeição].calorias + novoItem.calorias,
-        carboidratos: totals[tipoRefeição].carboidratos + novoItem.carboidratos,
-        proteínas: totals[tipoRefeição].proteínas + novoItem.proteínas,
-        gordura: totals[tipoRefeição].gordura + novoItem.gordura,
+      [mealName]: {
+        calories: totals[mealName].calories - parseInt(nutrients.kcal),
+        carbohydrates:
+          totals[mealName].carbohydrates - parseInt(nutrients.carbohydrates),
+        protein: totals[mealName].protein - parseInt(nutrients.protein),
+        lipids: totals[mealName].lipids - parseInt(nutrients.lipids),
       },
     });
   };
 
-  const removerItem = (
-    tipoRefeição,
-    id,
-    calorias,
-    carboidratos,
-    proteínas,
-    gordura
-  ) => {
+  const handleSelectFood = (item, mealName) => {
+    setModalVisible(false);
+
     setItems({
       ...items,
-      [tipoRefeição]: items[tipoRefeição].filter((item) => item.id !== id),
+      [mealName]: [...items[mealName], item],
     });
+
     setTotals({
       ...totals,
-      [tipoRefeição]: {
-        calorias: totals[tipoRefeição].calorias - calorias,
-        carboidratos: totals[tipoRefeição].carboidratos - carboidratos,
-        proteínas: totals[tipoRefeição].proteínas - proteínas,
-        gordura: totals[tipoRefeição].gordura - gordura,
+      [mealName]: {
+        calories: totals[mealName].calories + parseInt(item.nutrients.kcal),
+        carbohydrates:
+          totals[mealName].carbohydrates +
+          parseInt(item.nutrients.carbohydrates),
+        protein: totals[mealName].protein + parseInt(item.nutrients.protein),
+        lipids: totals[mealName].lipids + parseInt(item.nutrients.lipids),
       },
     });
   };
 
-  const renderRefeição = (tipoRefeição) => {
-    const formattedRefeição =
-      tipoRefeição.charAt(0).toUpperCase() + tipoRefeição.slice(1);
+  const renderMeal = (mealName) => {
     return (
       <View style={styles.mealContainer}>
         <View style={styles.titleContainer}></View>
@@ -106,14 +142,17 @@ const App = () => {
             style={styles.gradient}
           >
             <View style={styles.gradientTextContainer}>
-              <Text style={styles.gradientText}>{formattedRefeição}</Text>
+              <Text style={styles.gradientText}>{meals[mealName]}</Text>
             </View>
 
             <View style={styles.addButtonContainer}>
               <IconButton
                 icon="plus"
                 size={24}
-                onPress={() => adicionarItem(tipoRefeição)}
+                onPress={() => {
+                  setSelectedMeal(mealName);
+                  setModalVisible(true);
+                }}
                 color="#FFFFFF"
               />
             </View>
@@ -121,9 +160,7 @@ const App = () => {
         </View>
         {/* cristo do ceu que trabalho fazer grid de cor */}
         <View style={styles.shadowContainer}>
-          <Text style={styles.calories}>
-            {totals[tipoRefeição].calorias} kcal
-          </Text>
+          <Text style={styles.calories}>{totals[mealName].calories} kcal</Text>
           <View style={styles.macroContainer}>
             <View style={styles.macroRow}>
               <Text
@@ -132,7 +169,7 @@ const App = () => {
                 ●
               </Text>
               <Text style={styles.gorduraText}>
-                Gordura: {totals[tipoRefeição].gordura}g
+                Gordura: {totals[mealName].lipids}g
               </Text>
             </View>
             <View style={styles.macroRow}>
@@ -142,7 +179,7 @@ const App = () => {
                 ●
               </Text>
               <Text style={styles.carbsText}>
-                Carbs: {totals[tipoRefeição].carboidratos}g
+                Carbs: {totals[mealName].carbohydrates}g
               </Text>
             </View>
             <View style={styles.macroRow}>
@@ -152,48 +189,21 @@ const App = () => {
                 ●
               </Text>
               <Text style={styles.protText}>
-                Prot: {totals[tipoRefeição].proteínas}g
+                Prot: {totals[mealName].protein}g
               </Text>
             </View>
           </View>
-          <DropDownPicker
-            open={open[tipoRefeição]}
-            value={null}
-            items={items[tipoRefeição].map((item) => ({
-              label: item.nome,
-              value: item.id,
-            }))}
-            setOpen={(value) => setOpen({ ...open, [tipoRefeição]: value })}
-            setValue={() => {}}
-            setItems={(items) => setItems({ ...items, [tipoRefeição]: items })}
-            style={styles.dropdown}
-            placeholder="Selecione um item"
-            textStyle={{
-              color: "#888",
-              fontFamily: "Manrope-ExtraLight",
-              marginLeft: 6,
-            }}
-          />
           <FlatList
-            data={items[tipoRefeição]}
+            data={items[mealName]}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.foodItem}>
-                <Text>{item.nome}</Text>
-                <Text>{item.calorias} kcal</Text>
+                <Text>{item.name}</Text>
+                <Text>{item.nutrients.kcal} kcal</Text>
                 <IconButton
                   icon="close"
                   size={24}
-                  onPress={() =>
-                    removerItem(
-                      tipoRefeição,
-                      item.id,
-                      item.calorias,
-                      item.carboidratos,
-                      item.proteínas,
-                      item.gordura
-                    )
-                  }
+                  onPress={() => removeItem(item.id, mealName, item.nutrients)}
                 />
               </View>
             )}
@@ -205,6 +215,45 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.appContainer}>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={{ marginTop: 22 }}>
+          <View>
+            <Text>Lista de alimentos</Text>
+            <FlatList
+              data={foodData}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableHighlight
+                  onPress={() => handleSelectFood(item, selectedMeal)}
+                >
+                  <View style={styles.foodItem}>
+                    <Text>{item.name}</Text>
+                    <Text>{item.nutrients.kcal} kcal</Text>
+                    <Text>{item.nutrients.carbohydrates}c</Text>
+                    <Text>{item.nutrients.lipids}g </Text>
+                    <Text>{item.nutrients.protein}p</Text>
+                  </View>
+                </TouchableHighlight>
+              )}
+            />
+
+            <TouchableHighlight
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <Text>X</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
       <ScrollView>
         <View style={styles.headerContainer}>
           <Image source={profileImage} style={styles.icon} />
@@ -214,10 +263,10 @@ const App = () => {
           </View>
         </View>
         <View style={styles.container}>
-          {renderRefeição("caféDaManhã")}
-          {renderRefeição("almoço")}
-          {renderRefeição("jantar")}
-          {renderRefeição("lanches")}
+          {renderMeal("breakfast")}
+          {renderMeal("lunch")}
+          {renderMeal("dinner")}
+          {renderMeal("snacks")}
         </View>
 
         <View style={styles.summaryDivider}></View>
@@ -228,28 +277,28 @@ const App = () => {
             <Text style={styles.label}>Calorias restantes:</Text>
             <Text style={styles.value}>
               {objetivoTotalCalorias -
-                (totals.caféDaManhã.calorias +
-                  totals.almoço.calorias +
-                  totals.jantar.calorias +
-                  totals.lanches.calorias)}
+                (totals.breakfast.calories +
+                  totals.lunch.calories +
+                  totals.dinner.calories +
+                  totals.snacks.calories)}
             </Text>
           </View>
           <View style={styles.caloriesContainer}>
             <Text style={styles.label}>Calorias consumidas:</Text>
             <Text style={styles.value}>
-              {totals.caféDaManhã.calorias +
-                totals.almoço.calorias +
-                totals.jantar.calorias +
-                totals.lanches.calorias}
+              {totals.breakfast.calories +
+                totals.lunch.calories +
+                totals.dinner.calories +
+                totals.snacks.calories}
             </Text>
           </View>
           <View style={styles.caloriesContainer}>
             <Text style={styles.label}>39% do RDI: </Text>
             <Text style={styles.value}>
-              {totals.caféDaManhã.calorias +
-                totals.almoço.calorias +
-                totals.jantar.calorias +
-                totals.lanches.calorias}
+              {totals.breakfast.calories +
+                totals.lunch.calories +
+                totals.dinner.calories +
+                totals.snacks.calories}
             </Text>
           </View>
         </View>
