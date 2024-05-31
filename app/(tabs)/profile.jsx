@@ -6,7 +6,7 @@ import { Avatar, List } from "react-native-paper";
 
 const Profile = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
           <Image
