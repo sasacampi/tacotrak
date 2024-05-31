@@ -38,7 +38,7 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView>
         <View style={styles.container}>
           <Image source={profileImage} style={styles.icon} />
@@ -131,6 +131,7 @@ const styles = {
     flexWrap: "wrap",
     paddingHorizontal: 10,
     paddingVertical: 10,
+    backgroundColor: "#fff",
   },
 
   icon: {
@@ -161,6 +162,7 @@ const styles = {
   chartContainer: {
     marginVertical: 50,
     marginHorizontal: 20,
+    backgroundColor: "#fff",
   },
 
   listItem: {
@@ -179,9 +181,11 @@ const styles = {
   textContainer: {
     flex: 1,
     marginLeft: 6,
+    backgroundColor: "#fff",
   },
   rightContainer: {
     flexDirection: "column",
+    backgroundColor: "#fff",
   },
 
   titleIcon: {
@@ -214,6 +218,7 @@ const styles = {
   iconContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#fff",
   },
 
   textSubtitle: {
