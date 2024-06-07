@@ -1,15 +1,84 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 
-import { CustomButton, FormField } from "../../components";
+const CustomButton = ({ onPress, title, disabled }) => {
+  return (
+    <TouchableOpacity
+      style={[stylesButton.button, disabled && styles.disabledButton]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const stylesButton = StyleSheet.create({
+  button: {
+    backgroundColor: "#1E90FF",
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  disabledButton: {
+    backgroundColor: "#B0C4DE",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
+const FormField = ({
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry,
+  keyboardType,
+  autoCapitalize,
+}) => {
+  return (
+    <TextInput
+      style={formStyles.input}
+      placeholder={placeholder}
+      placeholderTextColor="#6B7280"
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
+      keyboardType={keyboardType}
+      autoCapitalize={autoCapitalize}
+    />
+  );
+};
+
+const formStyles = StyleSheet.create({
+  input: {
+    backgroundColor: "#333333",
+    color: "#FFFFFF",
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+});
 
 const SignIn = () => {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (name, value) => {
+    setForm({ ...form, [name]: value });
+  };
 
   const submit = () => {
     if (!form.email || !form.password) {
@@ -18,7 +87,7 @@ const SignIn = () => {
     }
 
     setIsSubmitting(true);
-    const loginUrl = "http://localhost:3000/api/login";
+    const loginUrl = "http://localhost:3000/login";
 
     fetch(loginUrl, {
       method: "POST",
@@ -37,8 +106,11 @@ const SignIn = () => {
       })
       .then((data) => {
         const { token } = data;
-
         console.log("JWT Token:", token);
+
+        Alert.alert("Sucesso", "Login realizado com sucesso.");
+
+        navigation.navigate("home");
       })
       .catch((error) => {
         Alert.alert("Erro", error.message);
@@ -49,81 +121,49 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#0D0D0D", flex: 1 }}>
-      <ScrollView>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            paddingHorizontal: 20,
-            minHeight: Dimensions.get("window").height - 100,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: "800",
-              color: "white",
-              marginTop: 10,
-              fontFamily: "Psemibold",
-              textAlign: "center",
-            }}
-          >
-            Taco<Text style={{ color: "orange" }}>trak</Text>
-          </Text>
+    <SafeAreaView style={styles.container}>
+      <View style={{ padding: "20px" }}>
+        <Text style={styles.title}>Sign In</Text>
 
-          <Text
-            style={{
-              fontSize: 24,
-              color: "white",
-              textAlign: "center",
-              marginTop: 10,
-            }}
-          >
-            Entrar no Tacotrak
-          </Text>
+        <FormField
+          placeholder="Email"
+          value={form.email}
+          onChangeText={(value) => handleChange("email", value)}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-          <FormField
-            title="Email"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles={{ marginTop: 20 }}
-            keyboardType="email-address"
-          />
+        <FormField
+          placeholder="Password"
+          value={form.password}
+          onChangeText={(value) => handleChange("password", value)}
+          secureTextEntry
+        />
 
-          <FormField
-            title="Senha"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles={{ marginTop: 20 }}
-            secureTextEntry={true}
-          />
-
-          <CustomButton
-            title="Entrar"
-            handlePress={submit}
-            containerStyles={{ marginTop: 20 }}
-            isLoading={isSubmitting}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 10,
-            }}
-          >
-            <Text style={{ fontSize: 16, color: "#FFFFFF" }}>
-              Não tem uma conta?{" "}
-            </Text>
-            <Link to="/sign-up" style={{ fontSize: 16, color: "#FF6F61" }}>
-              Cadastrar-se
-            </Link>
-          </View>
-        </View>
-      </ScrollView>
+        <CustomButton
+          onPress={submit}
+          title={isSubmitting ? "Signing In..." : "Sign In"}
+          disabled={isSubmitting}
+        />
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0D0D0D",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+});
 
 export default SignIn;
