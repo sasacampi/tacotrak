@@ -13,7 +13,7 @@ const Welcome = () => {
   if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-white h-full">
       <Loader isLoading={loading} />
 
       <ScrollView
@@ -23,22 +23,15 @@ const Welcome = () => {
       >
         <View className="w-full flex justify-center items-center h-full px-4">
           <Image
-            source={images.logo}
-            className="w-[130px] h-[84px]"
-            resizeMode="contain"
-          />
-
-          <Image
-            source={images.cards}
-            className="max-w-[380px] w-full h-[298px]"
+            source={images.card}
+            className="max-w-[380px] w-full h-[329px]"
             resizeMode="contain"
           />
 
           <View className="relative mt-5">
-            <Text className="text-3xl text-white font-bold text-center">
-              Discover Endless{"\n"}
-              Possibilities with{" "}
-              <Text className="text-secondary-200">Aora</Text>
+            <Text className="text-3xl text-secondary-200 font-bold text-center">
+              Alcance seus Objetivos{"\n"}
+              Fitness com <Text className="text-red-400">Tacotrak</Text>
             </Text>
 
             <Image
@@ -48,15 +41,15 @@ const Welcome = () => {
             />
           </View>
 
-          <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Where Creativity Meets Innovation: Embark on a Journey of Limitless
-            Exploration with Aora
+          <Text className="text-sm font-pregular mb-5 text-gray-100 mt-5 text-center">
+            Com o TacoTrak, você controla suas calorias de forma prática e
+            eficiente, utilizando a tabela brasileira de composição alimentar.
           </Text>
 
           <CustomButton
-            title="Continue with Email"
+            title="Crie sua conta"
             handlePress={() => router.push("/sign-in")}
-            containerStyles="w-full mt-7"
+            containerStyles="w-full text-mt-7 "
           />
         </View>
       </ScrollView>
