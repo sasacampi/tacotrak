@@ -8,35 +8,8 @@ const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   getCurrentUser()
-  //     .then((res) => {
-  //       if (res) {
-  //         setIsLogged(true);
-  //         setUser(res);
-  //       } else {
-  //         setIsLogged(false);
-  //         setUser(null);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, []);
-
   useEffect(() => {
-    const mockUser = {
-      id: "1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-    };
-
-    setIsLogged(true);
-    setUser(mockUser);
-    setLoading(false);
+    // Verificar se o usuário está logado
   }, []);
 
   return (
