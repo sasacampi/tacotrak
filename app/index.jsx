@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { Redirect, router } from "expo-router";
-import { View, Text, Image, ScrollView } from "react-native";
+import React from "react";
+import { View, Text, Image, StatusBar, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { images } from "../constants";
@@ -13,7 +12,7 @@ const Welcome = () => {
   if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <Loader isLoading={loading} />
 
       <ScrollView
@@ -21,35 +20,64 @@ const Welcome = () => {
           height: "100%",
         }}
       >
-        <View className="w-full flex justify-center items-center h-full px-4">
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 4,
+          }}
+        >
           <Image
             source={images.card}
-            className="max-w-[380px] w-full h-[329px]"
+            style={{ maxWidth: 380, width: "100%", height: 329 }}
             resizeMode="contain"
           />
 
-          <View className="relative mt-5">
-            <Text className="text-3xl text-secondary-200 font-bold text-center">
+          <View style={{ position: "relative", marginTop: 5 }}>
+            <Text
+              style={{
+                fontSize: 24,
+                color: "#3D3D3D",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
               Alcance seus Objetivos{"\n"}
-              Fitness com <Text className="text-red-400">Tacotrak</Text>
+              Fitness com <Text style={{ color: "#FF6347" }}>Tacotrak</Text>
             </Text>
 
             <Image
               source={images.path}
-              className="w-[136px] h-[15px] absolute -bottom-2 -right-8"
+              style={{
+                width: 136,
+                height: 15,
+                position: "absolute",
+                bottom: -2,
+                right: -8,
+              }}
               resizeMode="contain"
             />
           </View>
 
-          <Text className="text-sm font-pregular mb-5 text-gray-100 mt-5 text-center">
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "Pregular",
+              marginBottom: 5,
+              color: "#fff",
+              marginTop: 5,
+              textAlign: "center",
+            }}
+          >
             Com o TacoTrak, você controla suas calorias de forma prática e
             eficiente, utilizando a tabela brasileira de composição alimentar.
           </Text>
 
           <CustomButton
             title="Crie sua conta"
-            handlePress={() => router.push("/sign-up")}
-            containerStyles="w-full text-mt-7 "
+            handlePress={() => router.push("/sign-in")}
+            containerStyles={{ width: "100%", marginTop: 7 }}
           />
         </View>
       </ScrollView>

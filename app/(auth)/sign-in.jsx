@@ -23,9 +23,9 @@ const CustomButton = ({ onPress, title, disabled }) => {
 
 const stylesButton = StyleSheet.create({
   button: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#f87171",
     paddingVertical: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     alignItems: "center",
     marginVertical: 10,
   },
@@ -63,12 +63,14 @@ const FormField = ({
 
 const formStyles = StyleSheet.create({
   input: {
-    backgroundColor: "#333333",
-    color: "#FFFFFF",
+    backgroundColor: "#fff",
+    color: "#242752",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     marginBottom: 15,
     fontSize: 16,
+    borderColor: "#242752",
+    borderWidth: 1,
   },
 });
 
@@ -123,7 +125,8 @@ const SignIn = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: "20px" }}>
-        <Text style={styles.title}>Sign In</Text>
+        <Text style={styles.title}>Entrar</Text>
+        <Text style={styles.subtitle}>Seja bem-vindo de volta.</Text>
 
         <FormField
           placeholder="Email"
@@ -152,17 +155,21 @@ const SignIn = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#0D0D0D",
+    flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FFFFFF",
-    marginBottom: 20,
-    textAlign: "center",
+    color: "#242752",
+    textAlign: "left",
+  },
+  subtitle: {
+    color: "#97A7B7",
+    marginBottom: 30,
+    fontSize: 16,
   },
 });
 
