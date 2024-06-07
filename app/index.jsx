@@ -48,7 +48,7 @@ const Welcome = () => {
 
           <CustomButton
             title="Crie sua conta"
-            handlePress={() => router.push("/sign-in")}
+            handlePress={() => router.push("/sign-up")}
             containerStyles="w-full text-mt-7 "
           />
         </View>
