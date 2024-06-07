@@ -23,17 +23,18 @@ const CustomButton = ({ onPress, title, disabled }) => {
 
 const stylesButton = StyleSheet.create({
   button: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#8b5cf6",
     paddingVertical: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     alignItems: "center",
     marginVertical: 10,
+    color: "#fff",
   },
   disabledButton: {
     backgroundColor: "#B0C4DE",
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -63,12 +64,14 @@ const FormField = ({
 
 const formStyles = StyleSheet.create({
   input: {
-    backgroundColor: "#333333",
-    color: "#FFFFFF",
+    backgroundColor: "#fff",
+    color: "#242752",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     marginBottom: 15,
     fontSize: 16,
+    borderColor: "#242752",
+    borderWidth: 1,
   },
 });
 
@@ -128,7 +131,8 @@ const SignUp = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ padding: "20px" }}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={styles.title}>Bem-vindo</Text>
+        <Text style={styles.subtitle}>Crie sua conta para continuar.</Text>
 
         <FormField
           placeholder="Username"
@@ -153,7 +157,7 @@ const SignUp = () => {
 
         <CustomButton
           onPress={signUp}
-          title={isSubmitting ? "Signing Up..." : "Sign Up"}
+          title={isSubmitting ? "Criando conta..." : "Criar conta"}
           disabled={isSubmitting}
         />
       </View>
@@ -166,14 +170,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FFFFFF",
-    marginBottom: 20,
-    textAlign: "center",
+    color: "#242752",
+    textAlign: "left",
+  },
+  subtitle: {
+    color: "#97A7B7",
+    marginBottom: 30,
+    fontSize: 16,
   },
 });
 
