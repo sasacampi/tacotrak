@@ -1,128 +1,180 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Dimensions, Alert } from "react-native";
-import { CustomButton, FormField } from "../../components";
+import {
+  View,
+  Text,
+  ScrollView,
+  Alert,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+
+const CustomButton = ({ onPress, title, disabled }) => {
+  return (
+    <TouchableOpacity
+      style={[stylesButton.button, disabled && styles.disabledButton]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const stylesButton = StyleSheet.create({
+  button: {
+    backgroundColor: "#1E90FF",
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  disabledButton: {
+    backgroundColor: "#B0C4DE",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
+const FormField = ({
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry,
+  keyboardType,
+  autoCapitalize,
+}) => {
+  return (
+    <TextInput
+      style={formStyles.input}
+      placeholder={placeholder}
+      placeholderTextColor="#6B7280"
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
+      keyboardType={keyboardType}
+      autoCapitalize={autoCapitalize}
+    />
+  );
+};
+
+const formStyles = StyleSheet.create({
+  input: {
+    backgroundColor: "#333333",
+    color: "#FFFFFF",
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+});
 
 const SignUp = () => {
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
 
-  const signUp = async () => {
-    if (form.username === "" || form.email === "" || form.password === "") {
-      Alert.alert("Error", "Please fill in all fields");
+  const handleChange = (name, value) => {
+    setForm({ ...form, [name]: value });
+  };
+
+  const signUp = () => {
+    if (!form.name || !form.email || !form.password) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
       return;
     }
 
     setSubmitting(true);
+    const signUpUrl = "http://localhost:3000/users";
 
-    try {
-      const response = await fetch("http://192.168.1.100:3000/api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
+    fetch(signUpUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao criar usuário. Por favor, tente novamente.");
+        }
+
+        Alert.alert("Sucesso", "Usuário criado com sucesso.");
+
+        setForm({
+          name: "",
+          email: "",
+          password: "",
+        });
+
+        // Redirect to sign in
+
+        navigation.navigate("sign-in");
+      })
+      .catch((error) => {
+        Alert.alert("Erro", error.message);
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to sign up");
-      }
-
-      Alert.alert("Success", "Sign up successful");
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   return (
-    <ScrollView>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          paddingHorizontal: 20,
-          minHeight: Dimensions.get("window").height - 100,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "800",
-            color: "white",
-            marginTop: 10,
-            fontFamily: "Psemibold",
-          }}
-        >
-          Taco<Text style={{ color: "orange" }}>trak</Text>
-        </Text>
-
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "600",
-            color: "white",
-            marginTop: 10,
-            fontFamily: "Psemibold",
-          }}
-        >
-          Sign Up for Tacotrak
-        </Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={{ padding: "20px" }}>
+        <Text style={styles.title}>Sign Up</Text>
 
         <FormField
-          title="Username"
-          value={form.username}
-          handleChangeText={(text) => setForm({ ...form, username: text })}
-          otherStyles={{ marginTop: 10 }}
+          placeholder="Username"
+          value={form.name}
+          onChangeText={(value) => handleChange("name", value)}
         />
 
         <FormField
-          title="Email"
+          placeholder="Email"
           value={form.email}
-          handleChangeText={(text) => setForm({ ...form, email: text })}
-          otherStyles={{ marginTop: 7 }}
+          onChangeText={(value) => handleChange("email", value)}
           keyboardType="email-address"
+          autoCapitalize="none"
         />
 
         <FormField
-          title="Password"
+          placeholder="Password"
           value={form.password}
-          handleChangeText={(text) => setForm({ ...form, password: text })}
-          otherStyles={{ marginTop: 7 }}
+          onChangeText={(value) => handleChange("password", value)}
           secureTextEntry
         />
 
         <CustomButton
-          title="Sign Up"
-          handlePress={signUp}
-          containerStyles={{ marginTop: 7 }}
-          isLoading={isSubmitting}
+          onPress={signUp}
+          title={isSubmitting ? "Signing Up..." : "Sign Up"}
+          disabled={isSubmitting}
         />
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            paddingTop: 5,
-          }}
-        >
-          <Text style={{ fontSize: 16, color: "white", marginRight: 5 }}>
-            Already have an account?
-          </Text>
-          <Link
-            href="/sign-in"
-            style={{ fontSize: 16, color: "orange", fontWeight: "600" }}
-          >
-            Sign In
-          </Link>
-        </View>
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    backgroundColor: "#0D0D0D",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+});
 
 export default SignUp;
